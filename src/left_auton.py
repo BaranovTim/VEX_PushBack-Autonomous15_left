@@ -91,7 +91,7 @@ def smooth_input(value, deadband=10, expo=0.35, scale=1.0):
     x = value / 100.0
     y = (1 - expo) * x + expo * (x * x * x)
     return y * 100 * scale
-
+    
 
 def pre_autonomous():
     brain.screen.clear_screen()
@@ -135,53 +135,52 @@ def user_control():
     
     #collecting the middle blocks
     mid_motor.spin(REVERSE)
-    drivetrain.drive_for(FORWARD, 400, MM)
-    mid_motor.stop()
-
+    drivetrain.drive_for(FORWARD, 500, MM)
+    wait(0.5 , SECONDS)
+    drivetrain.drive_for(REVERSE, 100, MM)
     #aligning to get the blocks under the long goal and collecting 'em  
-    turn_by(-3) 
-    mid_motor.spin(REVERSE)
-    drivetrain.drive_for(FORWARD, 620, MM)
-    wait(0.5, SECONDS)
-    mid_motor.stop()
-    sorter.set(False)
+    #turn_by(-3) 
+    #mid_motor.spin(REVERSE)
+    #drivetrain.drive_for(FORWARD, 620, MM)
+    #wait(0.5, SECONDS)
+    #mid_motor.stop()
+    #sorter.set(False)
 
     #going back to the middle goal
-    drivetrain.drive_for(REVERSE, 680, MM)
-    turn_by(-84)
-    drivetrain.drive_for(REVERSE, 420, MM)
+    turn_by(-86)
+    drivetrain.drive_for(REVERSE, 375, MM)
     
     #scoring into the middle goal
     mid_motor.spin(REVERSE)
-    top_motor.spin(FORWARD)
+    top_motor.spin(REVERSE)
     wait(4, SECONDS)
     top_motor.stop()
+    sorter.set(True)
     turn_by(10)
 
     #thats the code for the long goal
-    mid_motor.set_velocity(30, PERCENT)
-    drivetrain.drive_for(FORWARD, 1300, MM)
+    drivetrain.drive_for(FORWARD, 1220, MM)
     turn_by(-49)
+    left_drive.set_velocity(50, PERCENT) 
+    right_drive.set_velocity(50, PERCENT)
     sorter.set(False)
-    drivetrain.drive_for(FORWARD, 180, MM)
+    drivetrain.drive_for(FORWARD, 290, MM)
 
     start_time = time.time()
-    while time.time() - start_time < 5:
+    while time.time() - start_time < 3:
         drivetrain.turn_for(LEFT, jitter, DEGREES)
         wait(0.1, SECONDS)
         drivetrain.turn_for(RIGHT, jitter, DEGREES)
         wait(0.1, SECONDS)
         drivetrain.drive_for(FORWARD, 20, MM)
+    mid_motor.stop()
 
-    start_pos = mid_motor.position(DEGREES) # checking that the mid motor did not jam
-    if abs(mid_motor.position(DEGREES) - start_pos) < 5:
-        mid_motor_break()
+    left_drive.set_velocity(70, PERCENT) 
+    right_drive.set_velocity(70, PERCENT)
 
     drivetrain.drive_for(REVERSE, 730, MM)
-
-    start_pos = mid_motor.position(DEGREES) # checking that the mid motor did not jam
-    if abs(mid_motor.position(DEGREES) - start_pos) < 5:
-        mid_motor_break()
+    mid_motor.set_velocity(100, PERCENT)
+    mid_motor.spin(REVERSE)
 
     top_motor.spin(REVERSE)
     wait(5, SECONDS)
