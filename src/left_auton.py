@@ -157,7 +157,7 @@ def autonomous():
     #scoring into the middle goal
     mid_motor.spin(REVERSE)
     top_motor.spin(REVERSE)
-    wait(4, SECONDS)
+    wait(3, SECONDS)
     top_motor.stop()
     sorter.set(True)
     turn_by(5)
