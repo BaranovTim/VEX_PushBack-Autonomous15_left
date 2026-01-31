@@ -114,3 +114,97 @@ def mid_motor_break():
 bunny_ear_state = False
 sorter_state = False
 double_parking_state = False
+
+def autonomous():
+    Thread(show_heading)   
+    sorter.set(True)
+    double_parking.set(False)
+
+    jitter = 15
+
+    #initial settings
+    mid_motor.set_velocity(100, PERCENT)
+    top_motor.set_velocity(100, PERCENT)
+    left_drive.set_velocity(20, PERCENT) 
+    right_drive.set_velocity(20, PERCENT)
+    drivetrain.set_turn_velocity(30, PERCENT)
+
+    # #aligning to get the middle blocks
+    # drivetrain.drive_for(FORWARD, 380, MM)  
+    # turn_by(-45)                    
+    # left_drive.set_velocity(30, PERCENT) 
+    # right_drive.set_velocity(30, PERCENT)
+    # #collecting the middle blocks
+    # mid_motor.spin(REVERSE)
+    # drivetrain.drive_for(FORWARD, 500, MM)
+    # wait(0.5 , SECONDS)
+    # drivetrain.drive_for(REVERSE, 100, MM)
+    # left_drive.set_velocity(70, PERCENT) 
+    # right_drive.set_velocity(70, PERCENT)
+    
+    # #aligning to get the blocks under the long goal and collecting 'em  
+    # #turn_by(-3) 
+    # #mid_motor.spin(REVERSE)
+    # #drivetrain.drive_for(FORWARD, 620, MM)
+    # #wait(0.5, SECONDS)
+    # #mid_motor.stop()
+    # #sorter.set(False)
+
+    # #going back to the middle goal
+    # turn_by(-86)
+    # drivetrain.drive_for(REVERSE, 385, MM)
+    
+    # #scoring into the middle goal
+    # mid_motor.spin(REVERSE)
+    # top_motor.spin(REVERSE)
+    # wait(4, SECONDS)
+    # top_motor.stop()
+    # sorter.set(True)
+    # turn_by(5)
+
+    # #thats the code for the long goal
+    # drivetrain.drive_for(FORWARD, 1200, MM)
+    # turn_by(-49)
+    # left_drive.set_velocity(30, PERCENT) 
+    # right_drive.set_velocity(30, PERCENT)
+    # sorter.set(False)
+    # drivetrain.drive_for(FORWARD, 320, MM)
+
+    # start_time = time.time()
+    # while time.time() - start_time < 3:
+    #     drivetrain.turn_for(LEFT, jitter, DEGREES)
+    #     wait(0.1, SECONDS)
+    #     drivetrain.turn_for(RIGHT, jitter, DEGREES)
+    #     wait(0.1, SECONDS)
+    #     drivetrain.drive_for(FORWARD, 20, MM)
+    # mid_motor.stop()
+
+    # turn_to(target_deg=-175)
+
+    # left_drive.set_velocity(70, PERCENT) 
+    # right_drive.set_velocity(70, PERCENT)
+
+    # drivetrain.drive_for(REVERSE, 730, MM)
+    mid_motor.set_velocity(100, PERCENT)
+    # mid_motor.spin(REVERSE)
+
+    # top_motor.spin(REVERSE)
+    # wait(5, SECONDS)
+    left_drive.set_velocity(70, PERCENT) 
+    right_drive.set_velocity(70, PERCENT)
+    drivetrain.drive_for(FORWARD, 400, MM)
+    imu.set_rotation(-175, DEGREES)
+    drivetrain.turn_for(LEFT, 45, DEGREES)
+    drivetrain.drive_for(FORWARD, 500, MM)
+    sorter.set(True)
+    right_drive.spin_for(FORWARD, 400)
+    left_drive.set_velocity(71, PERCENT) 
+    right_drive.set_velocity(70, PERCENT)
+    drivetrain.drive(FORWARD)
+    mid_motor.spin(REVERSE)
+    wait(1.2, SECONDS)
+    mid_motor.stop()
+    drivetrain.stop()
+    sorter.set(True)
+
+autonomous()

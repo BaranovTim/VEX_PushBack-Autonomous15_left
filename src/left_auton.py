@@ -115,7 +115,7 @@ bunny_ear_state = False
 sorter_state = False
 double_parking_state = False
 #SWITCH to autonomous() from user_control()
-def user_control():
+def autonomous():
     Thread(show_heading)   
     sorter.set(True)
     double_parking.set(False)
@@ -211,7 +211,7 @@ def deadband(v, db=10):
     return 0 if abs(v) < db else v
 
 #SWITCH to user_control() from autonomous()
-def autonomous():
+def user_control():
     global bunny_ear_state, sorter_state, double_parking_state
     brain.screen.clear_screen()
     top_motor.set_stopping(HOLD) # tries to freeze when stops
