@@ -133,8 +133,6 @@ def autonomous():
     #aligning to get the middle blocks
     drivetrain.drive_for(FORWARD, 380, MM)  
     turn_by(-45)                    
-    left_drive.set_velocity(70, PERCENT) 
-    right_drive.set_velocity(70, PERCENT)
     #collecting the middle blocks
     mid_motor.spin(REVERSE)
     drivetrain.drive_for(FORWARD, 500, MM)
@@ -158,7 +156,7 @@ def autonomous():
     #scoring into the middle goal
     mid_motor.spin(REVERSE)
     top_motor.spin(REVERSE)
-    wait(2, SECONDS)
+    wait(2.5, SECONDS)
     top_motor.stop()
     sorter.set(True)
     turn_by(5)
@@ -181,8 +179,6 @@ def autonomous():
         wait(0.1, SECONDS)
         drivetrain.drive_for(FORWARD, 20, MM)
     mid_motor.stop()
-
-    turn_to(target_deg=-175)
 
     left_drive.set_velocity(70, PERCENT) 
     right_drive.set_velocity(70, PERCENT)

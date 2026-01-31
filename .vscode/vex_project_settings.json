@@ -1,8 +1,8 @@
 {
 	"project": {
-		"name": "right_auton",
+		"name": "left_autonomous",
 		"slot": 1,
-		"description": "",
+		"description": "left!",
 		"platform": "V5",
 		"creationDate": "Fri, 23 Jan 2026 21:39:23 GMT",
 		"language": "python",

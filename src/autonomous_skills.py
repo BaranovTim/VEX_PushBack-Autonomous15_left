@@ -131,36 +131,38 @@ def autonomous():
 
     #aligning to get the middle blocks
     drivetrain.drive_for(FORWARD, 380, MM)  
-    turn_by(-45)                    
+    turn_by(-45)
     left_drive.set_velocity(30, PERCENT) 
-    right_drive.set_velocity(30, PERCENT)
+    right_drive.set_velocity(30, PERCENT)                    
     #collecting the middle blocks
     mid_motor.spin(REVERSE)
     drivetrain.drive_for(FORWARD, 500, MM)
-    wait(0.5, SECONDS)
+    wait(0.5 , SECONDS)
     drivetrain.drive_for(REVERSE, 100, MM)
-    left_drive.set_velocity(70, PERCENT) 
-    right_drive.set_velocity(70, PERCENT)
     
     #aligning to get the blocks under the long goal and collecting 'em  
-    turn_by(-3) 
-    mid_motor.spin(REVERSE)
-    drivetrain.drive_for(FORWARD, 620, MM)
-    wait(0.5, SECONDS)
-    mid_motor.stop()
-    sorter.set(False)
+    #turn_by(-3) 
+    #mid_motor.spin(REVERSE)
+    #drivetrain.drive_for(FORWARD, 620, MM)
+    #wait(0.5, SECONDS)
+    #mid_motor.stop()
+    #sorter.set(False)
 
     #going back to the middle goal
     turn_by(-86)
+    left_drive.set_velocity(70, PERCENT) 
+    right_drive.set_velocity(70, PERCENT)
     drivetrain.drive_for(REVERSE, 385, MM)
     
     #scoring into the middle goal
     mid_motor.spin(REVERSE)
     top_motor.spin(REVERSE)
-    wait(4, SECONDS)
+    wait(2.5, SECONDS)
     top_motor.stop()
     sorter.set(True)
     turn_by(5)
+    left_drive.set_velocity(70, PERCENT) 
+    right_drive.set_velocity(70, PERCENT)
 
     #thats the code for the long goal
     drivetrain.drive_for(FORWARD, 1200, MM)
@@ -171,15 +173,13 @@ def autonomous():
     drivetrain.drive_for(FORWARD, 320, MM)
 
     start_time = time.time()
-    while time.time() - start_time < 3:
+    while time.time() - start_time < 2:
         drivetrain.turn_for(LEFT, jitter, DEGREES)
         wait(0.1, SECONDS)
         drivetrain.turn_for(RIGHT, jitter, DEGREES)
         wait(0.1, SECONDS)
         drivetrain.drive_for(FORWARD, 20, MM)
     mid_motor.stop()
-
-    turn_to(target_deg=-175)
 
     left_drive.set_velocity(70, PERCENT) 
     right_drive.set_velocity(70, PERCENT)
@@ -190,6 +190,8 @@ def autonomous():
 
     top_motor.spin(REVERSE)
     wait(5, SECONDS)
+
+    #Second part
     left_drive.set_velocity(70, PERCENT) 
     right_drive.set_velocity(70, PERCENT)
     drivetrain.drive_for(FORWARD, 400, MM)
@@ -202,9 +204,13 @@ def autonomous():
     right_drive.set_velocity(70, PERCENT)
     drivetrain.drive(FORWARD)
     mid_motor.spin(REVERSE)
+    top_motor.spin(REVERSE)
     wait(1.2, SECONDS)
-    mid_motor.stop()
     drivetrain.stop()
     sorter.set(True)
+
+    wait(6.7, SECONDS)
+    mid_motor.stop()
+    top_motor.stop()
 
 autonomous()
