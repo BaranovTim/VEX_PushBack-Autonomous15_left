@@ -98,6 +98,7 @@ def pre_autonomous():
     calibrate_imu()
     imu.set_rotation(0, DEGREES)
     sorter.set(True)
+    bunny_ear.set(True)
     double_parking.set(False)
     wait(2, SECONDS)      
                                                                                                                                                                     
@@ -115,7 +116,7 @@ bunny_ear_state = False
 sorter_state = False
 double_parking_state = False
 #SWITCH to autonomous() from user_control()
-def user_control():
+def autonomous():
     Thread(show_heading)   
     sorter.set(True)
     double_parking.set(False)
@@ -132,15 +133,13 @@ def user_control():
     #aligning to get the middle blocks
     drivetrain.drive_for(FORWARD, 380, MM)  
     turn_by(-45)                    
-    left_drive.set_velocity(30, PERCENT) 
-    right_drive.set_velocity(30, PERCENT)
+    left_drive.set_velocity(70, PERCENT) 
+    right_drive.set_velocity(70, PERCENT)
     #collecting the middle blocks
     mid_motor.spin(REVERSE)
     drivetrain.drive_for(FORWARD, 500, MM)
     wait(0.5 , SECONDS)
     drivetrain.drive_for(REVERSE, 100, MM)
-    left_drive.set_velocity(70, PERCENT) 
-    right_drive.set_velocity(70, PERCENT)
     
     #aligning to get the blocks under the long goal and collecting 'em  
     #turn_by(-3) 
@@ -152,15 +151,19 @@ def user_control():
 
     #going back to the middle goal
     turn_by(-86)
+    left_drive.set_velocity(70, PERCENT) 
+    right_drive.set_velocity(70, PERCENT)
     drivetrain.drive_for(REVERSE, 385, MM)
     
     #scoring into the middle goal
     mid_motor.spin(REVERSE)
     top_motor.spin(REVERSE)
-    wait(4, SECONDS)
+    wait(2.5, SECONDS)
     top_motor.stop()
     sorter.set(True)
     turn_by(5)
+    left_drive.set_velocity(70, PERCENT) 
+    right_drive.set_velocity(70, PERCENT)
 
     #thats the code for the long goal
     drivetrain.drive_for(FORWARD, 1200, MM)
@@ -171,7 +174,7 @@ def user_control():
     drivetrain.drive_for(FORWARD, 320, MM)
 
     start_time = time.time()
-    while time.time() - start_time < 3:
+    while time.time() - start_time < 2:
         drivetrain.turn_for(LEFT, jitter, DEGREES)
         wait(0.1, SECONDS)
         drivetrain.turn_for(RIGHT, jitter, DEGREES)
@@ -211,7 +214,7 @@ def deadband(v, db=10):
     return 0 if abs(v) < db else v
 
 #SWITCH to user_control() from autonomous()
-def autonomous():
+def user_control():
     global bunny_ear_state, sorter_state, double_parking_state
     brain.screen.clear_screen()
     top_motor.set_stopping(HOLD) # tries to freeze when stops
