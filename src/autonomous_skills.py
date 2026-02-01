@@ -84,6 +84,32 @@ def turn_by(delta_deg, **kwargs):
 
 
 
+
+def smooth_acceleration(input_speed, distance):
+    accel_dist = 0.2 * distance 
+    # thats the distance that the robot accelerates/decelerates
+    decel_start = 0.8 * distance 
+    # thats when the robot starts decelerating
+    step = 1 
+    traveled = 0
+
+    while traveled < distance:
+        if traveled < accel_dist:
+            speed = input_speed * (traveled / accel_dist)
+
+        elif traveled > decel_start:
+            speed = input_speed * ((distance - traveled) / (distance - decel_start))
+
+        else:
+            speed = input_speed
+
+        left_drive.set_velocity(speed, PERCENT) 
+        right_drive.set_velocity(speed, PERCENT)
+        drivetrain.drive_for(FORWARD, step, MM)
+
+        traveled += step
+
+
 def smooth_input(value, deadband=10, expo=0.35, scale=1.0):
     # expo: 0 = linear, 1 = very soft center
     if abs(value) < deadband:

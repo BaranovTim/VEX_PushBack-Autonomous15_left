@@ -26,7 +26,8 @@ double_parking = DigitalOut(brain.three_wire_port.c)
 imu = Inertial(Ports.PORT7)
 
 
-drivetrain = DriveTrain(left_drive, right_drive, 314, 360, 40, MM, 1) # CHECK THIS (wheel travel per 1 cycle, track width, distance between front and back wheels, units, gear ratio )
+drivetrain = DriveTrain(left_drive, right_drive, 314, 360, 40, MM, 1) 
+# CHECK THIS (wheel travel per 1 cycle, track width, distance between front and back wheels, units, gear ratio )
    
 # /// INERTIAL SENSOR 
 
@@ -81,8 +82,7 @@ def turn_by(delta_deg, **kwargs):
     target = imu.rotation(DEGREES) + delta_deg
     turn_to(target, **kwargs) 
 
-
-
+# -- end of the code for Inertial Sensor
 
 def smooth_input(value, deadband=10, expo=0.35, scale=1.0):
     # expo: 0 = linear, 1 = very soft center
@@ -115,7 +115,7 @@ def mid_motor_break():
 bunny_ear_state = False
 sorter_state = False
 double_parking_state = False
-#SWITCH to autonomous() from user_control()
+#SWITCH to autonomous() from user_control() -----------------------------------------------------------------------------
 def autonomous():
     Thread(show_heading)   
     sorter.set(True)
@@ -195,7 +195,8 @@ def autonomous():
     top_motor.stop()
     drivetrain.stop()
 
-def mix_arcade(forward, turn): # makes the robot to be able to turn and go forward at the same time
+def mix_arcade(forward, turn): 
+    # makes the robot to be able to turn and go forward at the same time
     left = forward + turn
     right = forward - turn
 
@@ -209,7 +210,7 @@ def mix_arcade(forward, turn): # makes the robot to be able to turn and go forwa
 def deadband(v, db=10):
     return 0 if abs(v) < db else v
 
-#SWITCH to user_control() from autonomous()
+#SWITCH to user_control() from autonomous() -----------------------------------------------------------------------------------
 def user_control():
     global bunny_ear_state, sorter_state, double_parking_state
     brain.screen.clear_screen()
