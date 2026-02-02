@@ -42,9 +42,9 @@ def wrap180(deg):
     while deg < -180: deg += 360
     return deg
 
-def turn_to(target_deg, kP=1.5, min_speed=8, max_speed=50, tol=1.5):
+def turn_to(target_deg, kP=0.6, min_speed=8, max_speed=30, tol=1.5):
     while True:
-        err = wrap180(target_deg - imu.rotation(DEGREES))
+        err = wrap180(target_deg - imu.heading(DEGREES))
 
         if abs(err) <= tol:
             break
@@ -60,7 +60,7 @@ def turn_to(target_deg, kP=1.5, min_speed=8, max_speed=50, tol=1.5):
         left_drive.spin(FORWARD)
         right_drive.spin(FORWARD)
 
-        wait(0, MSEC)
+        wait(10, MSEC)
 
     left_drive.stop()
     right_drive.stop()
@@ -116,7 +116,7 @@ bunny_ear_state = False
 sorter_state = False
 double_parking_state = False
 #SWITCH to autonomous() from user_control() -----------------------------------------------------------------------------
-def autonomous():
+def user_control():
     Thread(show_heading)   
     sorter.set(True)
     double_parking.set(False)
@@ -211,7 +211,7 @@ def deadband(v, db=10):
     return 0 if abs(v) < db else v
 
 #SWITCH to user_control() from autonomous() -----------------------------------------------------------------------------------
-def user_control():
+def autonomous():
     global bunny_ear_state, sorter_state, double_parking_state
     brain.screen.clear_screen()
     top_motor.set_stopping(HOLD) # tries to freeze when stops
@@ -239,18 +239,9 @@ def user_control():
         forward = smooth_input(raw_forward)
 
         # linear turn (tune 0.9..1.2)
-        turn = raw_turn * 1
-
-        # turn kick based on driver "jerk", but only when actually moving
-        dturn = raw_turn - prev_turn
-        prev_turn = raw_turn
-
-        if abs(dturn) > 25 and abs(forward) > 15:
-            turn = turn * 1.25
+        turn = smooth_input(raw_turn)
 
         left_speed, right_speed = mix_arcade(forward, turn)
-
-
         
         left_drive.set_velocity(left_speed, PERCENT) 
         right_drive.set_velocity(right_speed, PERCENT) 
