@@ -224,7 +224,7 @@ def user_control():
         turn_by(jitter)
         wait(0.1, SECONDS)
         drivetrain.drive_for(FORWARD, 20, MM)
-    turn_to(straight_heading)
+    turn_to(straight_heading) #smartttttttttttttt
 
     #going to the long goal and scoring the blocks
     smooth_acceleration(70, -730)
