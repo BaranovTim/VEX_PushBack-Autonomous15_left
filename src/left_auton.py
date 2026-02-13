@@ -7,7 +7,10 @@ controller_1 = Controller(PRIMARY)
 
 # Motors
 top_motor = Motor(Ports.PORT6, GearSetting.RATIO_18_1, False) # type of gear (medium)
-mid_motor = Motor(Ports.PORT5, GearSetting.RATIO_18_1, False)
+mid_motor1 = Motor(Ports.PORT5, GearSetting.RATIO_18_1, False)
+mid_motor2 = Motor(Ports.PORT9, GearSetting.RATIO_18_1, True)
+mid_motor = MotorGroup(mid_motor1, mid_motor2)
+
 
 left_motor1 = Motor(Ports.PORT20, GearSetting.RATIO_18_1, False)
 left_motor2 = Motor(Ports.PORT19, GearSetting.RATIO_18_1, False)

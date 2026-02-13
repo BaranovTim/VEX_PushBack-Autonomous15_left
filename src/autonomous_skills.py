@@ -7,7 +7,9 @@ controller_1 = Controller(PRIMARY)
 
 # Motors
 top_motor = Motor(Ports.PORT6, GearSetting.RATIO_18_1, False) # type of gear (medium)
-mid_motor = Motor(Ports.PORT5, GearSetting.RATIO_18_1, False)
+mid_motor1 = Motor(Ports.PORT5, GearSetting.RATIO_18_1, False)
+mid_motor2 = Motor(Ports.PORT9, GearSetting.RATIO_18_1, True)
+mid_motor = MotorGroup(mid_motor1, mid_motor2)
 
 left_motor1 = Motor(Ports.PORT20, GearSetting.RATIO_18_1, False)
 left_motor2 = Motor(Ports.PORT19, GearSetting.RATIO_18_1, False)
@@ -167,7 +169,7 @@ def pre_autonomous():
     calibrate_imu()
     imu.set_rotation(0, DEGREES)
     sorter.set(True)
-    bunny_ear.set(True)
+    bunny_ear.set(False)
     double_parking.set(False)
     wait(2, SECONDS)      
                                                                                                                                                                     
@@ -208,32 +210,86 @@ def user_control():
     top_motor.set_velocity(100, PERCENT)
 
     #driving to the first loader
-    smooth_acceleration(60, 1200)
+    smooth_acceleration(60, 1185)
     turn_by(-85)
     sorter.set(True)
     mid_motor.spin(FORWARD)
     straight_heading = imu.heading()
 
     #collecting the blocks from the loader
-    smooth_acceleration(40, 310, end_speed=40)
-    jitter = 10
-    start_time = time.time()
-    while time.time() - start_time < 3:
-        turn_by(-jitter)
-        wait(0.1, SECONDS)
-        turn_by(jitter)
-        wait(0.1, SECONDS)
-        drivetrain.drive_for(FORWARD, 20, MM)
+    smooth_acceleration(40, 280, end_speed=40)
+    wait(2.5, SECONDS)
+    mid_motor.stop()
     turn_to(straight_heading) #smartttttttttttttt
 
     #going to the long goal and scoring the blocks
-    smooth_acceleration(70, -730)
-    top_motor.spin(REVERSE)
+    smooth_acceleration(70, -250)
+    turn_by(-40)
+    smooth_acceleration(50, -545)
+    turn_by(10)
+    smooth_acceleration(20, -10)
+    turn_to(straight_heading-5)
+    straight_heading = imu.heading()
+    smooth_acceleration(70, -1670)
+    turn_by(40)
+    smooth_acceleration(50, -340)
+    turn_by(130)
+    smooth_acceleration(70, -490)
+    mid_motor.spin(FORWARD)
+    top_motor.spin(REVERSE) # hi tim
     wait(4, SECONDS)
-
-    sorter.set(True)
-    mid_motor.stop()
     top_motor.stop()
+    smooth_acceleration(40, 715, end_speed=40)
+    wait(2.5, SECONDS)
+    mid_motor.stop()
+    smooth_acceleration(60, -715)
+    mid_motor.spin(FORWARD)
+    top_motor.spin(REVERSE)
+    wait(5, SECONDS)
+    smooth_acceleration(60, 430)
+    turn_by(87)
+    smooth_acceleration(60, 1175)
+    #------------------------------------------------------------------------------------------------
+    #driving to the first loader
+    smooth_acceleration(60, 1185)
+    turn_by(-85)
+    sorter.set(True)
+    mid_motor.spin(FORWARD)
+    straight_heading = imu.heading()
+
+    #collecting the blocks from the loader
+    smooth_acceleration(40, 280, end_speed=40)
+    wait(2.5, SECONDS)
+    mid_motor.stop()
+    turn_to(straight_heading) #smartttttttttttttt
+
+    #going to the long goal and scoring the blocks
+    smooth_acceleration(70, -250)
+    turn_by(-40)
+    smooth_acceleration(50, -545)
+    turn_by(10)
+    smooth_acceleration(20, -10)
+    turn_to(straight_heading-5)
+    straight_heading = imu.heading()
+    smooth_acceleration(70, -1670)
+    turn_by(40)
+    smooth_acceleration(50, -340)
+    turn_by(130)
+    smooth_acceleration(70, -490)
+    mid_motor.spin(FORWARD)
+    top_motor.spin(REVERSE) # hi tim
+    wait(4, SECONDS)
+    top_motor.stop()
+    smooth_acceleration(40, 715, end_speed=40)
+    wait(2.5, SECONDS)
+    mid_motor.stop()
+    smooth_acceleration(60, -715)
+    mid_motor.spin(FORWARD)
+    top_motor.spin(REVERSE)
+    wait(5, SECONDS)
+    smooth_acceleration(60, 430)
+    turn_by(87)
+    smooth_acceleration(60, 1175)
 
     #going to the top left long goal
     
