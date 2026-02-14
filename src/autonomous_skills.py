@@ -166,9 +166,10 @@ def smooth_acceleration(input_speed, distance_mm, start_speed=30, end_speed=20):
 
 def pre_autonomous():
     brain.screen.clear_screen()
+    controller_1.screen.clear_screen()
     calibrate_imu()
     imu.set_rotation(0, DEGREES)
-    sorter.set(True)
+    sorter.set(False)
     bunny_ear.set(False)
     double_parking.set(False)
     wait(2, SECONDS)      
@@ -211,8 +212,8 @@ def user_control():
 
     #driving to the first loader
     smooth_acceleration(60, 1185)
-    turn_by(-85)
     sorter.set(True)
+    turn_by(-85)
     mid_motor.spin(FORWARD)
     straight_heading = imu.heading()
 
@@ -239,16 +240,16 @@ def user_control():
     top_motor.spin(REVERSE) # hi tim
     wait(4, SECONDS)
     top_motor.stop()
-    smooth_acceleration(40, 715, end_speed=40)
-    wait(2.5, SECONDS)
+    smooth_acceleration(40, 725, end_speed=40)
+    wait(3.5, SECONDS)
     mid_motor.stop()
-    smooth_acceleration(60, -715)
+    smooth_acceleration(60, -725)
     mid_motor.spin(FORWARD)
     top_motor.spin(REVERSE)
     wait(5, SECONDS)
     mid_motor.stop()
     top_motor.stop()
-    smooth_acceleration(60, 410)
+    smooth_acceleration(60, 350)
     turn_by(87)
     smooth_acceleration(60, 1175)
     #------------------------------------------------------------------------------------------------
@@ -282,16 +283,25 @@ def user_control():
     top_motor.spin(REVERSE) # hi tim
     wait(4, SECONDS)
     top_motor.stop()
-    smooth_acceleration(40, 715, end_speed=40)
+    smooth_acceleration(40, 725, end_speed=40)
     wait(2.5, SECONDS)
     mid_motor.stop()
-    smooth_acceleration(60, -715)
+    smooth_acceleration(60, -725)
     mid_motor.spin(FORWARD)
     top_motor.spin(REVERSE)
     wait(5, SECONDS)
+    mid_motor.stop()
+    top_motor.stop()
     smooth_acceleration(60, 430)
     turn_by(87)
     smooth_acceleration(60, 1175)
+    turn_by(-90)
+    drivetrain.drive(FORWARD)
+    wait(1.2, SECONDS)
+    drivetrain.stop()
+    double_parking.set(True)
+    drivetrain.drive_for(REVERSE, 30, MM)
+    
 
     #going to the top left long goal
     

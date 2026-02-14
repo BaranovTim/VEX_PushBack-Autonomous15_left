@@ -95,15 +95,63 @@ def smooth_input(value, deadband=10, expo=0.35, scale=1.0):
     y = (1 - expo) * x + expo * (x * x * x)
     return y * 100 * scale
     
+def smooth_acceleration(input_speed, distance_mm, start_speed=30, end_speed=20):
+    if distance_mm == 0:
+        left_drive.stop()
+        right_drive.stop()
+        return
+
+    # Decide direction from sign of distance
+    dir = FORWARD if distance_mm > 0 else REVERSE
+    target = abs(distance_mm)
+
+    accel_dist  = 0.2 * target
+    decel_start = 0.8 * target
+
+    left_drive.reset_position()
+    right_drive.reset_position()
+
+    # Start moving
+    left_drive.spin(dir, start_speed, PERCENT)
+    right_drive.spin(dir, start_speed, PERCENT)
+
+    while True:
+        traveled_deg = (abs(left_drive.position(DEGREES)) + abs(right_drive.position(DEGREES))) / 2
+        traveled_mm  = traveled_deg * (314 / 360)  # your conversion
+
+        if traveled_mm >= target:
+            break
+
+        if traveled_mm < accel_dist:
+            ratio = traveled_mm / accel_dist if accel_dist > 0 else 1
+            speed = max(start_speed, input_speed * ratio)
+
+        elif traveled_mm > decel_start:
+            denom = (target - decel_start)
+            ratio = (target - traveled_mm) / denom if denom > 0 else 0
+            speed = max(end_speed, input_speed * ratio)
+
+        else:
+            speed = input_speed
+
+        # Force direction explicitly every loop
+        left_drive.spin(dir, speed, PERCENT)
+        right_drive.spin(dir, speed, PERCENT)
+
+        wait(10, MSEC)
+
+    left_drive.stop(BRAKE)
+    right_drive.stop(BRAKE)
 
 def pre_autonomous():
     brain.screen.clear_screen()
+    controller_1.screen.clear_screen()
     calibrate_imu()
     imu.set_rotation(0, DEGREES)
-    sorter.set(True)
-    bunny_ear.set(True)
+    sorter.set(False)
+    bunny_ear.set(False)
     double_parking.set(False)
-    wait(2, SECONDS)      
+    wait(2, SECONDS)       
                                                                                                                                                                     
 def mid_motor_break():
     time = 0.5
@@ -121,7 +169,7 @@ double_parking_state = False
 #SWITCH to autonomous() from user_control() -----------------------------------------------------------------------------
 def autonomous():
     Thread(show_heading)   
-    sorter.set(True)
+    sorter.set(False)
     double_parking.set(False)
 
     jitter = 15
@@ -137,15 +185,15 @@ def autonomous():
     drivetrain.drive_for(FORWARD, 380, MM)  
     turn_by(-45)                    
     #collecting the middle blocks
-    mid_motor.spin(REVERSE)
-    drivetrain.drive_for(FORWARD, 500, MM)
-    wait(0.5 , SECONDS)
-    drivetrain.drive_for(REVERSE, 100, MM)
+    mid_motor.spin(FORWARD)
+    smooth_acceleration(50, 500)
+    wait(0.5, SECONDS)
+    smooth_acceleration(50, -100)
     
     #aligning to get the blocks under the long goal and collecting 'em  
     #turn_by(-3) 
     #mid_motor.spin(REVERSE)
-    #drivetrain.drive_for(FORWARD, 620, MM)
+    #smooth_acceleration(FORWARD, 620, MM)
     #wait(0.5, SECONDS)
     #mid_motor.stop()
     #sorter.set(False)
@@ -154,41 +202,40 @@ def autonomous():
     turn_by(-86)
     left_drive.set_velocity(70, PERCENT) 
     right_drive.set_velocity(70, PERCENT)
-    drivetrain.drive_for(REVERSE, 385, MM)
+    smooth_acceleration(70, -385)
     
     #scoring into the middle goal
-    mid_motor.spin(REVERSE)
+    mid_motor.spin(FORWARD)
     top_motor.spin(REVERSE)
     wait(2.5, SECONDS)
     top_motor.stop()
-    sorter.set(True)
     turn_by(5)
     left_drive.set_velocity(70, PERCENT) 
     right_drive.set_velocity(70, PERCENT)
 
     #thats the code for the long goal
-    drivetrain.drive_for(FORWARD, 1200, MM)
+    smooth_acceleration(70, 1200)
     turn_by(-49)
     left_drive.set_velocity(30, PERCENT) 
     right_drive.set_velocity(30, PERCENT)
-    sorter.set(False)
-    drivetrain.drive_for(FORWARD, 320, MM)
+    sorter.set(True)
+    mid_motor.spin(FORWARD)
+    straight_heading = imu.heading()
 
-    start_time = time.time()
-    while time.time() - start_time < 2:
-        drivetrain.turn_for(LEFT, jitter, DEGREES)
-        wait(0.1, SECONDS)
-        drivetrain.turn_for(RIGHT, jitter, DEGREES)
-        wait(0.1, SECONDS)
-        drivetrain.drive_for(FORWARD, 20, MM)
+    #collecting the blocks from the loader
+    smooth_acceleration(40, 330, end_speed=40)
+    wait(2.5, SECONDS)
+    mid_motor.stop()
+    turn_to(straight_heading) #
+    wait(2.5, SECONDS)
     mid_motor.stop()
 
     left_drive.set_velocity(70, PERCENT) 
     right_drive.set_velocity(70, PERCENT)
 
-    drivetrain.drive_for(REVERSE, 730, MM)
+    smooth_acceleration(70, -730)
     mid_motor.set_velocity(100, PERCENT)
-    mid_motor.spin(REVERSE)
+    mid_motor.spin(FORWARD)
 
     top_motor.spin(REVERSE)
     wait(5, SECONDS)
