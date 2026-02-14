@@ -234,7 +234,7 @@ def user_control():
     turn_by(40)
     smooth_acceleration(50, -340)
     turn_by(130)
-    smooth_acceleration(70, -490)
+    smooth_acceleration(70, -520)
     mid_motor.spin(FORWARD)
     top_motor.spin(REVERSE) # hi tim
     wait(4, SECONDS)
@@ -246,7 +246,9 @@ def user_control():
     mid_motor.spin(FORWARD)
     top_motor.spin(REVERSE)
     wait(5, SECONDS)
-    smooth_acceleration(60, 430)
+    mid_motor.stop()
+    top_motor.stop()
+    smooth_acceleration(60, 410)
     turn_by(87)
     smooth_acceleration(60, 1175)
     #------------------------------------------------------------------------------------------------
@@ -263,13 +265,13 @@ def user_control():
     mid_motor.stop()
     turn_to(straight_heading) #smartttttttttttttt
 
-    #going to the long goal and scoring the blocks
+    #going to the long goal
     smooth_acceleration(70, -250)
-    turn_by(-40)
+    turn_by(-42)
     smooth_acceleration(50, -545)
     turn_by(10)
     smooth_acceleration(20, -10)
-    turn_to(straight_heading-5)
+    turn_by(32)
     straight_heading = imu.heading()
     smooth_acceleration(70, -1670)
     turn_by(40)
