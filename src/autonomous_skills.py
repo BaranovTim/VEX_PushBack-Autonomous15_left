@@ -219,7 +219,7 @@ def autonomous():
     controller_1.screen.print(straight_heading)
 
     #collecting the blocks from the loader
-    smooth_acceleration(70, 315, start_speed=50, end_speed=40)
+    smooth_acceleration(40, 315, end_speed=40)
     wait(2.5, SECONDS)
     mid_motor.stop()
     #turn_to(straight_heading) #smartttttttttttttt
@@ -256,7 +256,7 @@ def autonomous():
     if is_imu_right == True:
         turn_to(straight_heading)
     '''
-    smooth_acceleration(80, 725, end_speed=40, start_speed=50)
+    smooth_acceleration(40, 725, end_speed=40)
     wait(3.5, SECONDS)
     mid_motor.stop()
     smooth_acceleration(80, -725, end_speed=40, start_speed=70)
@@ -277,7 +277,7 @@ def autonomous():
     straight_heading = imu.heading()
 
     #collecting the blocks from the loader
-    smooth_acceleration(40, 280, end_speed=40,start_speed=50)
+    smooth_acceleration(40, 280, end_speed=40)
     wait(2.5, SECONDS)
     mid_motor.stop()
     #turn_to(straight_heading) #smartttttttttttttt
@@ -300,7 +300,7 @@ def autonomous():
     
     #finished scoring the blocks from the third loader
     #4th loader
-    smooth_acceleration(80, 710, end_speed=40, start_speed=70)
+    smooth_acceleration(40, 710, end_speed=40)
     wait(3.5, SECONDS)
     mid_motor.stop()
     smooth_acceleration(80, -710, end_speed=40, start_speed=70)
@@ -327,12 +327,12 @@ def user_control():
     brain.screen.clear_screen()
     top_motor.set_stopping(HOLD) # tries to freeze when stops
     mid_motor.set_stopping(HOLD)
-    left_motor1.set_stopping(COAST)
-    left_motor2.set_stopping(COAST)
-    right_motor1.set_stopping(COAST)
-    right_motor2.set_stopping(COAST)
-    left_drive.set_stopping(COAST)
-    right_drive.set_stopping(COAST)
+    left_motor1.set_stopping(HOLD)
+    left_motor2.set_stopping(HOLD)
+    right_motor1.set_stopping(HOLD)
+    right_motor2.set_stopping(HOLD)
+    left_drive.set_stopping(HOLD)
+    right_drive.set_stopping(HOLD)
 
 
     prevA = False
@@ -350,18 +350,9 @@ def user_control():
         forward = smooth_input(raw_forward)
 
         # linear turn (tune 0.9..1.2)
-        turn = raw_turn * 1
-
-        # turn kick based on driver "jerk", but only when actually moving
-        dturn = raw_turn - prev_turn
-        prev_turn = raw_turn
-
-        if abs(dturn) > 25 and abs(forward) > 15:
-            turn = turn * 1.25
+        turn = smooth_input(raw_turn)
 
         left_speed, right_speed = mix_arcade(forward, turn)
-
-
         
         left_drive.set_velocity(left_speed, PERCENT) 
         right_drive.set_velocity(right_speed, PERCENT) 
@@ -401,10 +392,10 @@ def user_control():
         #-------- Motor 2
         if controller_1.buttonL2.pressing():
             mid_motor.set_velocity(100, PERCENT)
-            mid_motor.spin(FORWARD)
+            mid_motor.spin(REVERSE)
         elif controller_1.buttonL1.pressing():
             mid_motor.set_velocity(100, PERCENT)
-            mid_motor.spin(REVERSE)
+            mid_motor.spin(FORWARD)
         else:
             mid_motor.stop()
 

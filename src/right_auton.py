@@ -212,12 +212,12 @@ def user_control():
     brain.screen.clear_screen()
     top_motor.set_stopping(HOLD) # tries to freeze when stops
     mid_motor.set_stopping(HOLD)
-    left_motor1.set_stopping(COAST)
-    left_motor2.set_stopping(COAST)
-    right_motor1.set_stopping(COAST)
-    right_motor2.set_stopping(COAST)
-    left_drive.set_stopping(COAST)
-    right_drive.set_stopping(COAST)
+    left_motor1.set_stopping(HOLD)
+    left_motor2.set_stopping(HOLD)
+    right_motor1.set_stopping(HOLD)
+    right_motor2.set_stopping(HOLD)
+    left_drive.set_stopping(HOLD)
+    right_drive.set_stopping(HOLD)
 
 
     prevA = False
@@ -235,18 +235,9 @@ def user_control():
         forward = smooth_input(raw_forward)
 
         # linear turn (tune 0.9..1.2)
-        turn = raw_turn * 1
-
-        # turn kick based on driver "jerk", but only when actually moving
-        dturn = raw_turn - prev_turn
-        prev_turn = raw_turn
-
-        if abs(dturn) > 25 and abs(forward) > 15:
-            turn = turn * 1.25
+        turn = smooth_input(raw_turn)
 
         left_speed, right_speed = mix_arcade(forward, turn)
-
-
         
         left_drive.set_velocity(left_speed, PERCENT) 
         right_drive.set_velocity(right_speed, PERCENT) 
@@ -286,10 +277,10 @@ def user_control():
         #-------- Motor 2
         if controller_1.buttonL2.pressing():
             mid_motor.set_velocity(100, PERCENT)
-            mid_motor.spin(FORWARD)
+            mid_motor.spin(REVERSE)
         elif controller_1.buttonL1.pressing():
             mid_motor.set_velocity(100, PERCENT)
-            mid_motor.spin(REVERSE)
+            mid_motor.spin(FORWARD)
         else:
             mid_motor.stop()
 
