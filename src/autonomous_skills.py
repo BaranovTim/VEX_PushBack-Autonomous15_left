@@ -30,7 +30,71 @@ imu = Inertial(Ports.PORT7)
 
 drivetrain = DriveTrain(left_drive, right_drive, 314, 360, 40, MM, 1) 
 # CHECK THIS (wheel travel per 1 cycle, track width, distance between front and back wheels, units, gear ratio )
-   
+
+
+# /// PID
+
+def pid(target_mm, kP=0.25, kI=0.0, kD=0.15,
+                         max_power=80, settle_error=5, settle_time_ms=250, timeout_ms=4000):
+
+    left_drive.reset_position()
+    right_drive.reset_position()
+
+    integral = 0.0
+    last_error = 0.0
+    dt = 0.02 
+
+    settled_ms = 0
+    elapsed_ms = 0
+
+    while elapsed_ms < timeout_ms:
+        
+        left_deg = left_drive.position(DEGREES)
+        right_deg = right_drive.position(DEGREES)
+        avg_deg = (left_deg + right_deg) / 2.0
+
+        wheel_circ_mm = 319.19  
+        traveled_mm = (avg_deg / 360.0) * wheel_circ_mm
+
+        error = target_mm - traveled_mm
+
+        
+        integral += error * dt
+        if integral > 2000: integral = 2000
+        if integral < -2000: integral = -2000
+
+        derivative = (error - last_error) / dt
+        last_error = error
+
+        output = (kP * error) + (kI * integral) + (kD * derivative)
+
+        
+        if output > max_power: output = max_power
+        if output < -max_power: output = -max_power
+
+        drivetrain.set_drive_velocity(abs(output), PERCENT)
+
+        if output >= 0:
+            drivetrain.drive(FORWARD)
+        else:
+            drivetrain.drive(REVERSE)
+
+        
+        if abs(error) <= settle_error:
+            settled_ms += int(dt * 1000)
+            if settled_ms >= settle_time_ms:
+                break
+        else:
+            settled_ms = 0
+
+        wait(int(dt * 1000), MSEC)
+        elapsed_ms += int(dt * 1000)
+
+    drivetrain.stop(BRAKE)
+
+
+
+
 # /// INERTIAL SENSOR 
 
 def calibrate_imu():
