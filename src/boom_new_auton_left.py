@@ -413,6 +413,10 @@ bunny_ear_state = False
 sorter_state = False
 double_parking_state = False
 
+def arm_down():
+    wait(0.5, SECONDS)
+    sorter.set(True)
+
 #SWITCH to autonomous() from user_control() -----------------------------------------------------------------------------
 def autonomous():
     imu.set_rotation(0, DEGREES)
@@ -424,8 +428,8 @@ def autonomous():
     turn_by(-49)                    
     #collecting the middle blocks
     mid_motor.spin(FORWARD)
+    Thread(arm_down)
     smooth_acceleration(50, 639, end_speed=10)
-    sorter.set(True)
     wait(0.5, SECONDS)
     smooth_acceleration(50, -100)
     
